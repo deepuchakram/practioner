@@ -1,0 +1,96 @@
+###################
+##ClassNotes
+###################
+
+2-Pizza Teams => Jeff Bezos (Amazon CEO)
+Shift left
+Technical Debt
+Agile
+  1. Feedback Loop (iterations)
+  2. Sprint
+  3. Focuses on small incremental Changes (After MVP (Minimum Viable product))
+Waterfall Model for SDLC
+  1. Long TTM
+  2. No Flexibility
+
+Software development types:
+  1. Enhancements (New Feature)
+  2. BugFix/Hotfix
+
+IT professionals:
+  1. Dev
+  2. QA
+  3. Ops
+
+Pipeline / Workflow => No of steps (each step is triggered by the previous one)
+
+
+===================
+DevOps ToolChain
+===================
+
+
+Source Code management / Version Control System:[SCM/VCS] => Git, SVN, Accurev, Stash, CodeCommit
+Continuous Integration Tools => Jenkins, Bamboo, TravisCI, teamcity, CodePipeline, CodeBuild, CodeDeploy
+Configuration Management => Puppet, Chef, Ansible, Salt, Powershell DSC, CFEngine, OpsWorks (Puppet and Chef)
+Containers => Docker
+Container Orchestration Engines (CoE) => Swarm, Kubernetes, Mesosphere, Openshift, ECS and EKS (Kubernetes as a Service)
+Monitoring => ELK, Nagios, CloudWatch, CloudTrail
+GitLab
+
+
+
+Companies to follow (for DevOps):
+
+Amazon
+Netflix
+etsy
+rackspace
+Google
+Facebook
+
+DevOps Industry Experts:
+
+Patrick Debois
+Martin Fowler
+Jene Kim [The Phoenix project, The DevOps Handbook]
+Mark Hornbeek
+Jez Humble
+
+20% => Tools and Technology
+80% => Culture
+
+
+
+AWS Certified DevOps Engineer
+Docker
+Jenkins
+Chef
+Ansible
+Puppet
+Nagios
+
+Security as Code
+Compliance as Code
+
+===================
+References
+===================
+Linux: https://linuxjourney.com/
+Terminal Alternate: https://termius.com/
+Netflix: https://www.youtube.com/watch?v=UTKIT6STSVM
+DevOps Blog: https://dzone.com/devops-tutorials-tools-news
+https://xebialabs.com/periodic-table-of-devops-tools/
+https://www.redhat.com/en/topics/devops/what-is-devsecops
+https://www.inspec.io/ (Compliance-as-Code)
+
+VirtualBox + Vagrant
+
+
+
+
+
+
+
+
+.

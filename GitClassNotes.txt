@@ -1,0 +1,135 @@
+###################
+##GitClassNotes
+###################
+
+Keywords:
+
+1. Source code Management / Version Control Systems
+2. Repositories (repo)
+3. OpenSource (Apache 2.0 / MIT)
+4. Delta files (Data Deduplication)
+5. Git Master = SVN Trunk = TFS Main
+6. SVN Commit = Git Push
+7. Always do a "git pull" before "git push"
+
+
+=======================
+Linux and Git both were written by Linus Torvalds
+=======================
+
+Linux => RedHat, ubuntu, Debian
+Git   => GitHub, GitLab & BitBucket, TFS in VSTS, AWS CodeCommit
+
+
+Why SCM/VCS?
+  1. Versioning
+  2. Automatic backups
+  3. Collaboration
+  4. Auditing (investigation)
+  5. Branching
+
+
+Application A = repo appA
+Application B = repo appB
+
+Types of VCS:
+  Local (fileSystem)          => SCCS, RCS
+  Centralized (Client-Server) => SVN, TFS, Accurev, Perforce
+  Distributed                 => Git, Mercurial, Bazaar
+
+=======================
+Installation
+=======================
+Official Page: https://git-scm.com/
+
+Installation commands:
+
+apt-get install git
+git --version
+git version 2.17.1
+
+Author profile setup:
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+git config --list
+
+=======================
+Commands
+=======================
+
+git init => initialize a git repo
+  ## .git/ folder gets created which is the storage location for all git repo metadata
+git status
+git add . => track the files (also known as staging)
+git commit -am "your commit message"
+  -a => add/stage the files
+  -m => commit message
+git clone https://github.com/sk12k/test-dev.git
+git push
+  Syntax: git push <remotename> <branchname>
+  Example: git push origin master
+git pull
+git remote (Alias)
+git show <commitId>
+
+git tagging (bookmark)
+  syntax: git tag tagname <commitId>
+  example: git tag mytag b2e992e
+
+Ignoring files in git
+  .gitignore
+  ~.git/info/exclude
+
+Branching and Merging
+git branch              => see all branches
+git branch <branchname> => create a new branch
+git checkout fA         => switch to branch fA
+git merge fA            => merge fA branch with your current branch
+
+Merge conflicts
+
+<<<<<<< HEAD
+Local content
+=======
+Remote content
+>>>>>>> cefa7c34764f23f707954cb606236f29af0cba44
+
+
+=================
+Exercise:
+=================
+
+  1. Login to GitHub account (if you have not created, then first create a github account)
+  2. create a public repository
+  3. create some sample files
+  4. commit changes
+  5. clone repository on your local lab machine
+
+  6. make changes to some files locally
+  7. push your changes to GitHub using git push command
+  8. make changes to files on GitHub
+  9. pull theses changes to your local repo using git pull command
+
+
+=================
+References
+=================
+
+https://git-scm.com/book/en/v2
+https://www.atlassian.com/git/tutorials/advanced-overview
+https://www.atlassian.com/git/tutorials/saving-changes/git-stash
+http://gitimmersion.com/
+https://www.git-tower.com/learn/
+http://rogerdudler.github.io/git-guide/
+
+=================
+Questions
+=================
+
+Q. git clone vs git pull
+Q. git merge vs rebase
+Q. git stash
+Q. fork workflow + Pull request
+
+
+.

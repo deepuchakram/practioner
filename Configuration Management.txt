@@ -1,0 +1,426 @@
+############################
+##Configuration Management
+############################
+
+Puppet  [2005]
+Chef    [2007]
+Ansible [2012]
+
+Keywords:
+
+Configuration Drift
+Configuration Management
+Idempotence
+Self-Healing
+Out-of-Band Changes
+DSC => Desired State Configuration
+DSL => Domain Specific Language
+      Puppet DSL
+      Ansible DSL
+      Chef DSL
+Imperative (What as well as how) vs Declarative
+Compliance-as-Code => https://www.inspec.io/
+Configuration Items => user, service, package etc.
+providers
+Infrastucture-as-Code
+Immutable Infrastructure
+System Center Configuration Manager (SCCM)
+Collection of Facts
+Checksum
+Change failure => one of the common reasons is Configuration Drift
+
+******************************
+AMI => Amazon Machine Images
+Golden/Standard Template => same configuration as your prod machines
+******************************
+
+AppA
+
+Dev Machines:
+
+.net framework 4.5
+user x has read permission on folder y
+port 5555 is closed
+
+
+.net framework 5.0
+user x has r/w permission on folder y
+port 5555 is opened
+
+app version from 1.3 => 1.4
+
+## sosreport
+
+Deploy to prod
+
+******************************
+## Chef Recipe Example
+******************************
+package "git" do
+  action :install
+end
+
+user "xyz" do
+  action :create
+end
+
+service "httpd" do
+  action :start
+end
+
+file "/etc/ntp/ntp.conf" do
+  action :create
+  content "some content"
+end
+
+******************************
+## Puppet Keywords
+******************************
+
+ - Environment
+ - Modules
+ - Manifests
+ - Classes
+ - Puppet Forge (forge.puppet.com)
+
+===========================
+Sample manifest file
+===========================
+node default {
+  package { 'tree':
+    ensure    => 'installed'
+  }
+  user { 'sk12k':
+    ensure    => 'present',
+    password  => '123456'
+  }
+  file { '/tmp/info.txt':
+    ensure    => 'present',
+    content   => "This file has been created by puppetserver\n"
+  }
+  service { 'nginx':
+    ensure    => 'started'
+  }
+}
+
+===========================
+site.pp and init.pp
+===========================
+
+site.pp => Environment specific
+init.pp => Module specific (in chef it is known as default.rb)
+
+===========================
+Modules and Classes
+===========================
+
+cd /etc/puppetlabs/code/environments/production
+cd modules
+
+##before we work with modules we need to install pdk (puppet development kit)
+
+apt-get install pdk
+
+##Once installed we can generate our new module using the following command:
+
+pdk new module mynginx
+
+##It will prompt us to a series a questions which we need to answer appropriately.
+##Once all questions are answered it will create module successfully.
+
+cd mynginx
+
+##This is how the folder should look like:
+.
+└── mynginx
+    ├── CHANGELOG.md
+    ├── Gemfile
+    ├── Gemfile.lock
+    ├── README.md
+    ├── Rakefile
+    ├── appveyor.yml
+    ├── data
+    │   └── common.yaml
+    ├── examples
+    ├── files
+    ├── hiera.yaml
+    ├── manifests
+    ├── metadata.json
+    ├── spec
+    │   ├── default_facts.yml
+    │   └── spec_helper.rb
+    ├── tasks
+    └── templates
+
+- data - stores all the information about your Heira configuration.
+- files - there is where static files for nodes are stored
+- manifests - folder where all manifest files (.pp) are kept
+- spec - this one holds all the details about the plug-ins.
+- tasks - provides ad hoc command capability in puppet
+- templates - dynamic file creation on nodes based on some condition
+
+###Writing a Manifest (inside a module)
+
+pdk new class install
+# this will create a new file called manifests/install.pp
+
+vi manifests/install.pp
+
+class nginx::install {
+  package { 'install_nginx':
+    name   => 'nginx',
+    ensure => 'present',
+  }
+}
+
+##Testing your puppet code
+
+puppet parser validate manifests/install.pp
+
+##If nothing is returned, we know the file is properly formatted.
+
+pdk new class nginx
+vi manifests/init.pp
+
+class nginx {
+  contain nginx::install
+}
+
+## Edit site.pp file for production environment.
+
+vi /etc/puppetlabs/code/environments/production/manifests/site.pp
+
+node default {
+  include nginx::install
+}
+
+## We are all set from Puppet server side. Now go to Puppet Slave and run the following command:
+
+puppet agent -t
+
+##To confirm nginx installation, run the following command on Puppet Slave:
+
+which nginx
+
+Output:
+/usr/sbin/nginx
+
+===============================
+References
+===============================
+
+https://www.edureka.co/blog/what-is-puppet/
+https://www.edureka.co/blog/tag/puppet/
+https://www.edureka.co/blog/chef-vs-puppet-vs-ansible-vs-saltstack/
+https://docs.puppet.com/
+https://www.puppetcookbook.com/
+http://fullstack-puppet-docs.readthedocs.io/en/latest/puppet_manifests.html
+http://www.bogotobogo.com/DevOps/Puppet/puppet_basics_of_code_terminology.php
+
+
+
+
+############################
+## Ansible
+############################
+
+******************
+Keywords
+******************
+
+  - Modules
+  - Playbooks
+  - Roles
+  - Ansible Galaxy (galaxy.ansible.com)
+  - AdHoc commands
+  - Inventory
+
+===========================
+Installation and Configuration
+===========================
+
+Pre-requisites:
+  - System Account for all nodes and Server
+  - ssh has to be enabled (in case of windows, WinRM (5985) should be enabled)
+  - password-less Authentication
+  - install python on all Nodes
+
+
+## Create a System Account: (you need perform this on all nodes and master)
+
+1. adduser ansible
+
+2. usermod -aG sudo ansible
+
+3. Edit the following line using 'visudo'
+
+%sudo   ALL=(ALL:ALL) NOPASSWD:ALL
+%admin   ALL=(ALL:ALL) NOPASSWD:ALL
+
+================================
+Only on Nodes:
+
+edit the following line in /etc/ssh/sshd_config
+PasswordAuthentication no
+change it to:
+PasswordAuthentication yes
+## restart ssh:
+systemctl restart sshd
+
+================================
+## PasswordLess Authentication
+================================
+On Master:
+
+  ssh-keygen -t rsa
+  ssh ansible@159.65.157.154 mkdir -p .ssh
+  cat .ssh/id_rsa.pub | ssh ansible@159.65.157.154 'cat >> .ssh/authorized_keys'
+
+ssh ansible@159.65.157.154
+
+================================
+## Installation
+================================
+
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+
+
+## Check if python is installed on your node:
+
+which python
+or
+which python3
+/usr/bin/python3
+
+## If you have python3 but not python then run the following command to create a sym link:
+
+ln -s /usr/bin/python3 /usr/bin/python
+
+================================
+Ad-Hoc commands
+================================
+ansible all -m ping
+
+ansible all -a "ls -al /home/vagrant"
+
+ansible nodes -m copy -a "src=test.txt dest=/tmp/test.txt"
+
+ansible nodes -m apt -a "name=tree state=present"
+
+ansible nodes -m apt -a "name=tree state=present" --become #run with sudo
+
+ansible nodes -m apt -a "name=tree state=absent" --become #remove the package via ad hoc command.
+
+ansible nodes -m user -a "name=test" --become
+
+ansible all -m user -a "name=test state=absent" --become
+
+================================
+Playbooks
+================================
+--- ##This is a demo playbook for Ansible
+- hosts: nodes
+  remote_user: ansible
+  become: yes
+  become_method: sudo
+  connection: ssh
+
+  tasks:
+  - name: install nginx on all nodes
+    apt:
+      name: nginx
+      state: present
+  - name: service
+    service:
+      name: nginx
+      state: started
+  roles:
+    - { role: geerlingguy.nginx }
+
+
+=========================================
+Working with Roles
+=========================================
+
+ansible-galaxy install geerlingguy.apache
+
+      -> defaults (default configuration Variables)
+        -> ANSIBLE_ROLES_PATH
+      -> files (files to deploy to the remote system)
+      -> handlers (conditional tasks that run if notified)
+      -> meta (role metadata (for example - dependencies))
+      -> tasks (main entry point, actions to complete)
+      -> templates (customizable files to deploy)
+      -> vars (high priority configuration variables)
+
+
+--- #demo role
+- hosts: mars
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  connection: ssh
+  roles:
+    - { role: geerlingguy.nginx }
+
+
+======================
+References
+======================
+
+https://www.ansible.com/blog/topic/getting-started
+https://serversforhackers.com/c/an-ansible2-tutorial
+https://www.softwaretestinghelp.com/ansible-tutorial-1/
+https://www.ansible.com/blog/getting-started-writing-your-first-playbook
+
+======================
+Questions:
+======================
+
+Q. Why Configuration Management tools? (instead of scripting (such as bash, powershell etc.))
+Answer:
+  - Code Readability
+  - Standard way of writing Code and thus easy maintenance
+  - heavy lifting is already done for you
+  - self healing
+  - Idempotence
+
+
+Q.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.

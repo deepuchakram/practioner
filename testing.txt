@@ -1,0 +1,46 @@
+##########################
+##Testing in DevOps
+##########################
+
+
+Testing Levels:
+Unit
+Integration
+System test
+Regression
+
+Deployment Strategies:
+
+Rolling Deployments
+Blue/Green Deployment
+Canary Deployments => Enables you to do A/B testing
+
+
+fA => Modified
+fB
+fC
+
+
+TDD
+  - Write your test cases (before you write your code)
+  - run the tests and see them fail
+  - Modify your code to make the test pass
+  - refactor and repeat
+
+BDD (Emphasis is on Collaboration)
+  3 Amigos
+  - product Owner
+  - Tester
+  - Developers
+  => Scenarios
+      => Given ........
+      => When  ........
+      => Then  ........
+
+
+
+
+
+
+Testing links:
+https://www.guru99.com/levels-of-testing.html

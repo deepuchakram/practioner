@@ -1,0 +1,233 @@
+Session-3
+##########################
+##JenkinsClassNotes
+##########################
+
+Important Links:
+
+OpenSource Version => https://jenkins.io/
+Enterprise Version => https://www.cloudbees.com/
+Certified Jenkins Engineer => https://www.cloudbees.com/jenkins/jenkins-certification
+
+*****************
+Agenda
+*****************
+
+1. Installation and Configuration
+2. Plugins
+3. Security and Access Control
+    => Manage Jenkins => Configure Global Security
+4. Global Tool settings
+    -> Install the tool on jenkins master/slave
+    -> Install appropriate jenkins plugin using "Manage Plugins" under "Manage Jenkins"
+    -> Configure Environment for the tool inside "Global Tool Settings"
+5. Create some pipelines/jobs
+6. Upstream projects => trigger downstream projects
+    Project A => triggers Project B
+7. Parameterized builds => using this you can pass variables at runtime.
+8. Build slave architecture (Distributed Builds in Jenkins)
+9. Build Triggers
+    - Manual build (using "Build now" option on Jenkins Console)
+    - build after other projects
+    - Build periodically
+    - Poll SCM
+    - Trigger builds remotely (WebHooks)
+10. Pipeline-as-Code (using Jenkinsfile)
+
+*****************
+Keywords
+*****************
+
+Job/Project can be used interchangeably
+Build => Iteration of a job
+TFSHudson / Jenkins
+.hpi / .jpi
+Hudson => Jenkins
+Infrastructure-as-Code
+Jenkins home folder => /var/lib/jenkins
+working directory => /var/lib/jenkins/workspace/<project_name>/
+MS Azure => VSTS (Visual Studio Team Services) => TFS => TFS
+                                                      => Git
+
+AWS => Deployment (Developer Services)  => CodeCommit
+                                        => CodePipeline
+                                        => CodeDeploy
+                                        => CodeBuild
+*****************
+AAA of Security:
+*****************
+
+A => Authentication
+    MFA (Multi-Factor Authentication)
+      => What you know
+      => What you have
+      => What you are
+A => Authorization
+A => Accountability / logging / Auditing
+
+
+Definition (https://www.thoughtworks.com/continuous-integration)
+===================
+Continuous Integration (CI) is a development practice that requires developers to integrate code into a shared repository several times a day. Each check-in is then verified by an automated build, allowing teams to detect problems early.
+- Martin Fowler
+
+
+Important steps in CI Pipeline:
+- Developers frequently Check-in their code (at least once a day)
+- Check-in triggers automated builds
+- Automated tests run
+- Results shared with the stakeholders (Testers/Developers/Product Managers)
+
+Benefits:
+- Early detection of Bugs
+- Easy removal of Bugs
+
+Jira+Bitbucket+Bamboo
+
+Jenkins/Bamboo/
+- Pluggable architecture
+-
+
+CI => Continuous Integration
+CD => Continuous Delivery => "Deploy to Prod" step is Manual (End result is deployable artifact)
+CD => Continuous Deployment => "Deploy to Prod" step is Automated (End result is an actual deployment to prod)
+
+==============================
+Installation and Configuration
+==============================
+
+## Install and verify Java
+sudo apt install openjdk-8-jdk
+java -version
+
+## Add key
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+
+## Add the following entry in your /etc/apt/sources.list:
+deb https://pkg.jenkins.io/debian-stable binary/
+or
+echo "deb https://pkg.jenkins.io/debian-stable binary/" >> /etc/apt/sources.list
+
+
+## Update and Install Jenkins
+sudo apt-get update
+sudo apt-get install jenkins
+
+## Access Jenkins CI server on:
+<ipaddress>:8080
+
+## Copy the initialAdminPassword using the following command and paste in the browser window:
+cat /var/lib/jenkins/secrets/initialAdminPassword
+
+
+Installation Reference: https://jenkins.io/download/
+==============================
+Maven
+==============================
+
+Java Build tools:
+  ANT
+  Maven
+  Gradle
+
+.Net
+ - msbuild
+
+
+compile
+test
+package
+clean install
+deploy
+
+Why Jenkins Slave?
+  - resource utilization
+  - Configure a slave for certain type of jobs environment
+
+
+
+msbuild (2)
+Maven (5)
+ANT (1)
+
+
+Label: mavenslave
+host1
+host2
+host3
+
+Label: msbuildslave
+host4
+host5
+
+Label: antslave
+host6
+
+Label: dbslave
+host7
+host8
+
+==============================
+Steps to setup Jenkins Slave (tested on Ubuntu 16.04)
+==============================
+- Manage Jenkins => Manage Nodes
+- Put all details of the Node to be used as slave
+- test the ssh credentials from Jenkins Master to Jenkins Slave Node
+    ** If ssh not working, please check settings in the following file:
+      /etc/ssh/sshd_config
+      change "PasswordAuthentication no" to "PasswordAuthentication yes"
+- Once sshd_config edited, restart the sshd service:
+  service sshd restart
+  or
+  systemctl restart sshd
+
+==============================
+Class Exercise:
+==============================
+
+SCM: https://github.com/sk12k/test-dev.git
+
+Build Steps: "Invoke Top lavel Maven targets"
+Goals =>
+  compile
+  package
+
+configure maven inside global tools settings:
+
+save the job and build it
+
+
+Build Manually
+Build Periodically
+Poll SCM
+Trigger builds remotely (this is used in Git WebHook)
+
+
+Cron jobs => same as Scheduled jobs in Windows
+
+
+
+http://139.59.41.31:8080/job/localrepo/configure
+
+
+curl
+invoke-webrequest
+curl http://139.59.41.31:8080/job/localrepo/build?token=mytoken
+
+.git/hook/post-commit
+
+
+
+==================
+References
+==================
+
+
+https://jenkins.io/doc/pipeline/tour/hello-world/
+
+
+
+
+
+
+.
