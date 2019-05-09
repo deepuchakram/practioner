@@ -1,0 +1,11 @@
+---
+- hosts: MyClient
+
+  tasks:
+  - name: Download WAR to local
+    get_url:
+      url: http://18.221.129.212:8081/nexus/content/repositories/releases/com/devops/webapp/{{artifactId}/{{deployVersion}}/{{artifactId}-{{deployVersion}}.{{package}}
+      dest: {{JENKINS_WORKSPACE}}
+
+  - name: Deploy WAR file
+    copy: src={{JENKINS_WORKSPACE}}/{{artifactId}-{{deployVersion}}.{{package}} dest=/root/tomcat7/webapps/

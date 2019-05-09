@@ -1,0 +1,62 @@
+https://github.com/prasanjit-/devops_pipeline_demo/blob/master/docker/Dockerfile
+
+
+
+https://github.com/kapilsthakkar25/kubernetes-demo
+
+
+https://github.com/asquarezone/AnsibleZone
+
+for practice:
+
+https://github.com/asquarezone/AnsibleZone/blob/master/ClassRoomExamples/Jan2018/Basics/webserver.yaml
+https://github.com/asquarezone/AnsibleZone/blob/master/ClassRoomExamples/Jan2018/Basics/inventory/appserver.yaml
+https://github.com/asquarezone/AnsibleZone/tree/master/ClassRoomExamples/July2018/basics
+
+
+https://github.com/asquarezone/AnsibleZone/blob/master/Examples/Examples/apache/apache.yaml
+---
+
+- hosts: all
+
+  become: yes
+
+  tasks:
+
+  - name: install apache webserver
+
+    yum:
+
+      name: httpd
+
+    notify: Restart HTTPD
+
+  handlers:
+
+  - name: Restart HTTPD
+
+    service: 
+
+      name: httpd
+
+      state: restarted 
+
+
+https://github.com/puppetlabs/puppetlabs-package
+
+
+https://github.com/DevOpsPlatform/Phase-1
+
+https://github.com/DevOpsPlatform/Intro
+
+
+https://github.com/eparis/kubernetes-ansible
+
+
+https://github.com/linuxacademy/cicd-pipeline-train-schedule-cd/blob/master/Jenkinsfile
+
+
+https://github.com/ICESI/ds-kubernetes/tree/master/01_all_commands
+
+
+https://github.com/sbeliakou/ansible-examples/tree/develop/samples

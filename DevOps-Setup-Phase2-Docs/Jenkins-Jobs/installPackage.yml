@@ -1,0 +1,4 @@
+- hosts: MyClient
+  tasks:
+   - name: install tree
+     yum: name=tree update_cache=yes state=latest

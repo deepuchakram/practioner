@@ -1,0 +1,85 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>releaseVersion</name>
+          <description></description>
+          <defaultValue></defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.8.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/DIGITALAPPLICATION/WebApp.git</url>
+        <credentialsId>jenkinsGitHub</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Maven>
+      <targets>-V install</targets>
+      <mavenName>maven-3.5.3</mavenName>
+      <usePrivateRepository>false</usePrivateRepository>
+      <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+      <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+      <injectBuildVariables>false</injectBuildVariables>
+    </hudson.tasks.Maven>
+    <hudson.tasks.Shell>
+      <command>
+#ansible-playbook /etc/ansible/playbooks/warDeployWithVariables.yml --extra-vars &apos;{&quot;WORKSPACE&quot;:&quot;${WORKSPACE}&qu                                                             ot;, &quot;releaseVersion&quot;:&quot;${releaseVersion}&quot; }&apos;</command>
+    </hudson.tasks.Shell>
+    <org.jenkinsci.plugins.ansible.AnsiblePlaybookBuilder plugin="ansible@0.8">
+      <playbook>/etc/ansible/playbooks/warDeployWithVariables.yml</playbook>
+      <limit>MyClient</limit>
+      <tags></tags>
+      <skippedTags></skippedTags>
+      <startAtTask></startAtTask>
+      <credentialsId></credentialsId>
+      <vaultCredentialsId></vaultCredentialsId>
+      <sudo>false</sudo>
+      <sudoUser></sudoUser>
+      <forks>5</forks>
+      <unbufferedOutput>true</unbufferedOutput>
+      <colorizedOutput>false</colorizedOutput>
+      <hostKeyChecking>false</hostKeyChecking>
+      <additionalParameters>-v</additionalParameters>
+      <copyCredentialsInWorkspace>false</copyCredentialsInWorkspace>
+      <extraVars>
+        <org.jenkinsci.plugins.ansible.ExtraVar>
+          <key>WORKSPACE</key>
+          <value>${WORKSPACE}</value>
+          <hidden>false</hidden>
+        </org.jenkinsci.plugins.ansible.ExtraVar>
+        <org.jenkinsci.plugins.ansible.ExtraVar>
+          <key>releaseVersion</key>
+          <value>${releaseVersion}</value>
+          <hidden>false</hidden>
+        </org.jenkinsci.plugins.ansible.ExtraVar>
+      </extraVars>
+    </org.jenkinsci.plugins.ansible.AnsiblePlaybookBuilder>
+  </builders>
+  <publishers/>
+  <buildWrappers/>

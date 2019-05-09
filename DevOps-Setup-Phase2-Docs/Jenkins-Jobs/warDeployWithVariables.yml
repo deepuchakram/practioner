@@ -1,0 +1,9 @@
+- hosts: MyClient
+  tasks:
+  - name: Download WAR to server
+    get_url:
+      url: http://18.221.129.212:8081/nexus/content/repositories/releases/com/devops/webapp/{{artifactId}}/{{deployVersion}}/{{artifactId}}-{{deployVersion}}.{{package}}
+      dest: .
+
+  - name: Deploy WAR file
+    command: mv ./{{artifactId}}-{{deployVersion}}.{{package}} /root/tomcat7/webapps/

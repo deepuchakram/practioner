@@ -1,0 +1,5 @@
+- hosts: MyClient
+
+  tasks:
+  - name: Deploy WAR file
+    copy: src=/root/.jenkins/workspace/FreeStyleJob-Deploy-Playbook/target/WebApp-1.war dest=/root/tomcat7/webapps/
