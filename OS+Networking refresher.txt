@@ -1,0 +1,66 @@
+
+*************<<Operating System Concepts>>*************
+
+1. Intro: https://www.studytonight.com/operating-system/introduction-operating-systems
+
+2. Virtual Memory: https://searchstorage.techtarget.com/definition/virtual-memory
+
+3. Process Scheduling: https://www.studytonight.com/operating-system/process-scheduling
+
+4. Linux boot process: https://www.thegeekstuff.com/2011/02/linux-boot-process
+
+5. Windows boot process: http://sansbound.com/blog/2012/08/10/understanding-the-boot-process-charles-joseph/
+
+6. File permissions: https://www.guru99.com/file-permissions.html
+
+7. Linux: https://linuxjourney.com/
+    Basic Commands: https://maker.pro/linux/tutorial/basic-linux-commands-for-beginners
+
+
+*************<<Networking Concepts>>*************
+
+Make sure you have a big picture understanding of how networks work -
+https://www.youtube.com/watch?v=9BGWrLiT9qs
+
+1. TCP/IP -
+
+    3-way handshake - https://support.microsoft.com/en-in/help/172983/explanation-of-the-three-way-handshake-via-tcp-ip
+
+2. HTTP - https://hpbn.co/
+
+3. SSL/TLS -
+              https://blog.cloudflare.com/keyless-ssl-the-nitty-gritty-technical-details/
+              https://www.ssl.com/article/ssl-tls-handshake-overview/
+
+4. IP addressing: https://www.cisco.com/c/en/us/support/docs/ip/routing-information-protocol-rip/13788-3.html
+           https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd379547(v=ws.10)
+
+5. NAT: https://www.slashroot.in/linux-nat-network-address-translation-router-explained
+             https://netfilter.org/documentation/HOWTO/NAT-HOWTO.html#toc6.1
+    SNAT: https://netfilter.org/documentation/HOWTO/NAT-HOWTO-6.html#ss6.2
+
+6. DNS:
+              https://www.verisign.com/en_US/website-presence/online/how-dns-works/index.xhtml
+              https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/dd197427(v=ws.10)
+
+
+8. DHCP: https://www.youtube.com/watch?v=0Dp7YoR0SLE
+                https://vinitpandey.com/2015/06/17/dora-process-of-dhcp/
+
+9. ARP: https://networklessons.com/cisco/ccnp-route/arp-address-resolution-protocol-explained
+
+10. MSS/MTU: https://www.imperva.com/blog/mtu-mss-explained/
+
+Good YouTube Reference for Networking - ELI the computer guy
+
+
+*************<<Scenario Based Questions>>*************
+
+
+Q. When you type amazon.com in a web browser, what happens next?
+
+Q. how email gets delivered to the intended recipient's inbox?
+
+Q. HTTP Error codes, their meaning and possible troubleshooting
+
+Q. How your mobile/laptop gets connected to internet (using wifi router)?

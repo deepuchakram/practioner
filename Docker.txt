@@ -1,0 +1,399 @@
+###############################
+## Docker
+###############################
+
+Agenda
+
+ - Docker Fundamentals and Commands
+ - Docker Networking
+ - Dockerfile
+ - Docker Compose
+ - Docker Swarm
+ - Kubernetes
+
+
+Keywords:
+
+Docker != Containers
+Monolithic vs Microservices
+RDBMS (Oracle MySQL etc.) vs NoSQL DBs (CouchDB, MariaDB, MongoDB etc.)
+12 Factor App
+Distributed Computing
+API => Application Programming Interface
+  => API Developers (Expose the API)
+  => API Consumers
+API + OAuth (SAML)
+2 Pizza teams
+You build it. You run it!
+Hypervisor (Type 1 and Type 2)
+Pre-curser to Containers => chroot, solaris zone, jail
+
+Physical Machines => 5-10% utilization
+Virtual Machines  => 50-70% utilization
+Containers        => 70-90% utilization
+Serverless        => >90% utilization  ## Function-as-a-Service
+CSI => (Container Storage Interface)  => Storage Driver
+AUFS/Devicemapper => Copy-on-Write mechanism
+
+CNI => (Container Network Interfaces) => Network Driver
+Examples => Calico, Weave, Flannel
+Overlay Network => SDN (Software Defined Networking) [NSX]
+
+Virtual Machines (Traditional Virtualization) => Hardware level Virtualization
+Containers    => OS Level Virtualization
+
+Isolation in Containers:
+  => Namespaces
+  => CGroups
+
+YAML
+  - Lists
+  - Maps
+
+
+===========================
+Docker Installation
+===========================
+
+https://get.docker.com/
+
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker ${USER}
+
+sudo systemctl status docker
+
+
+Docker EE => Enterprise Edition
+Docker CE => Community Edition
+
+
+===========================
+Docker Architecture / Components
+===========================
+
+- Docker Host
+- Docker Daemon (Also referred as "Docker Runtime")
+- Docker client (Commands)
+- Docker Images (Read Only Layers)
+    VMware    => Templates
+    AWS       => AMI (Amazon Machine Images)
+    Vagrant   => Box
+    OpenStack => Images
+
+- Docker Containers (Read / Write Layers)
+
+
+- Docker Registry
+    - https://hub.docker.com/ ## Like GitHub of Images
+    - ECR (AWS)
+  Repository => each image with multiple versions of it.
+    -
+- Dockerfile
+
+Dockerfile => Docker Images => Docker Containers
+                            => Docker Registry
+
+
+===========================
+Docker Commands
+===========================
+
+docker info
+docker ps (docker container ls)
+docker ps -a (docker container ls -a)
+docker images
+docker search <Keywords>
+docker pull <imagename>:<tagname> => ## defaults to docker pull imagename:latest
+docker pull ubuntu:latest
+docker rmi <imagename>:<tagname>
+docker run -it <imagename>
+    -i => interactive
+    -t => terminal
+    -d => detached / daemonized
+
+    -it  => root user mode
+    -itd => detached / daemonized mode
+
+    --name=<customname>
+
+    -p 8080:80
+
+Port forwarding Example:
+  docker run -it --name=myweb -p 8787:80 nginx:latest /bin/bash
+
+Volumes
+  -v <path-on-host>:<path-on-container>
+
+Volume Example:
+docker run -itd --name=myapp -v /root/myapp:/myapp mci
+
+
+exit      => exit out of the container (container is stopped)
+CTRL+P+Q  => exit out of the container (without stopping the container)
+docker attach <containerid> or <containername>
+docker start <containerid> or <containername>
+docker stop <containerid> or <containername>
+docker commit <containerid> <newimagename>:<tagname>
+docker tag <imagename> <newimagenamge>
+docker login
+docker push
+docker inspect <objectname> or <objectid>
+
+===========================
+Docker Networking
+===========================
+ifconfig
+docker0   Link encap:Ethernet  HWaddr 02:42:41:c5:e6:da
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          inet6 addr: fe80::42:41ff:fec5:e6da/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:2553 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:4538 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+
+docker0 => Default Gateway
+
+
+*************************
+Network Types in Docker
+*************************
+
+- Bridge
+- Host
+- Null
+- MacVLAN
+- Overlay
+
+
+User-defined bridge networks are best when you need multiple containers to communicate on the same Docker host.
+Host networks are best when the network stack should not be isolated from the Docker host, but you want other aspects of the container to be isolated.
+
+Overlay networks are best when you need containers running on different Docker hosts to communicate, or when multiple applications work together using swarm services.
+Macvlan networks are best when you are migrating from a VM setup or need your containers to look like physical hosts on your network, each with a unique MAC address.
+Third-party network plugins allow you to integrate Docker with specialized network stacks.
+
+
+Network commands
+
+docker network ls
+docker network create <networkdriver> <networkname>
+docker network inspect <networkname or id>
+docker network connect mynet 88e215354f94
+docker network disconnect <networkname> <containername>
+
+docker netowrk create host mynet
+
+
+Network references:
+https://docs.docker.com/network/
+
+
+===========================
+Dockerfile
+===========================
+
+INSTRUCTIONS arguments
+FROM
+RUN
+EXPOSE
+ADD
+CMD
+LABEL
+VOLUME
+ENTRYPOINT
+
+RUN vs CMD => Run is for the compile time, whereas CMD is at the runtime
+
+*******************************
+##Sample Dockerfile
+*******************************
+
+vi Dockerfile
+
+## Demo Dockerfile for creating a customized image
+FROM ubuntu:latest
+LABEL name="sharique" email="sk12k@simplilearn.com"
+RUN apt-get update
+RUN apt-get install tree -y
+
+CMD ["./script.sh"]
+
+Once the file is created:
+
+docker build -t <imagename:tagname> .
+
+
+
+Dockerfile Reference: https://docs.docker.com/engine/reference/builder/
+
+===========================
+Docker Compose
+===========================
+
+1. Run this command to download the current stable release of Docker Compose:
+sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+2. Apply executable permissions to the binary:
+sudo chmod +x /usr/local/bin/docker-compose
+
+3. Test the installation.
+Command: docker-compose --version
+Output: docker-compose version 1.24.0, build 1110ad01
+
+====================
+docker-compose.yaml
+====================
+
+version: '3.3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: somewordpress
+       MYSQL_DATABASE: wordpress
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: wordpress
+
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: wordpress
+       WORDPRESS_DB_NAME: wordpress
+volumes:
+    db_data: {}
+
+************************
+Docker Compose Commands
+************************
+
+docker-compose up
+docker-compose down
+
+
+Reference:
+https://docs.docker.com/compose/overview/
+https://docs.docker.com/compose/install/
+https://docs.docker.com/compose/wordpress/
+https://docs.docker.com/compose/compose-file/
+
+
+===========================
+Docker Swarm
+===========================
+
+CoE (Container Orchestration Engines):
+  - Docker Swarm (Docker)
+  - Apache Mesosphere (Apache) => DC/OS [dcos.io]
+  - Kubernetes (k8s)
+  - Openshift (RedHat)
+  - EKS (AWS)
+  - AKS (MS Azure)
+  - GKE (Google Cloud Platform)
+
+Keywords:
+  - Swarm
+  - Services
+  - Tasks
+
+*******Swarm Init*******
+
+root@ubuntu-docker:~# docker swarm init --advertise-addr 68.183.88.163
+Swarm initialized: current node (i4q0j9sem3hjh7vfe5hfolou5) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-2x237nrvovxaf6ci7ukwe37fer45iaf9um7wo3mdzuk8tdiqvs-4tvm7uejmc0frda9nni2129dp 68.183.88.163:2377
+    docker swarm join --token SWMTKN-1-2x237nrvovxaf6ci7ukwe37fer45iaf9um7wo3mdzuk8tdiqvs-4tvm7uejmc0frda9nni2129dp 68.183.88.163:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+
+## docker swarm join-token worker => will give you the join token for the worker nodes
+
+Working with Services:
+
+Create a Service:
+docker service create --replicas 3 -p 80:80 --name web nginx
+
+Check Service:
+docker service ls
+docker service ps <servicename>
+
+Scaling (up or down) a service:
+docker service scale <servicename>=<#of replicas>
+example: docker service scale web=5
+
+Drain a Node:
+docker node update --availability drain ubuntu-docker
+
+
+References:
+Swarm Getting Started: https://docs.docker.com/get-started/part4/
+
+===========================
+Reference
+===========================
+
+
+https://docs.docker.com/engine/docker-overview/
+https://linuxize.com/post/how-to-install-and-use-docker-on-ubuntu-18-04/
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+
+
+
+Google's contribution to Containers:
+ - Namespaces and CGroups
+ - Docker => written in Golang
+ - Kubernetes => written in Golang
+ - Kubernetes was a google project (earlier known as Borg)
+
+
+=========================
+Questions
+=========================
+
+Q. Docker run and docker start are same?
+No
+
+Q. What are the pre-requisites for Docker Push vs Docker pull
+
+For Docker Pull:
+  - Image name and tag
+
+For Docker Push
+  - Docker hub login (account on Docker hub)
+  - image name in a specific format
+
+
+=====================================
+Networking and OS Concepts refresher
+=====================================
+
+Q. NAT => Network address Translation
+  - Private and Public IP addresses
+  - IP address classes
+
+Q. Why Subnetting?
+
+
+
+
+
+
+
+
+
+
+.
